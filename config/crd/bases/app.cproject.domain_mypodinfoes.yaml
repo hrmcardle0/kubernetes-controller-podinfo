@@ -1,0 +1,76 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+  name: mypodinfoes.app.cproject.domain
+spec:
+  group: app.cproject.domain
+  names:
+    kind: MyPodinfo
+    listKind: MyPodinfoList
+    plural: mypodinfoes
+    singular: mypodinfo
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: MyPodinfo is the Schema for the mypodinfoes API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MyPodinfoSpec defines the desired state of MyPodinfo
+            properties:
+              image:
+                description: image is the contanier image to use
+                properties:
+                  image:
+                    description: Image is the image to use
+                    type: string
+                  name:
+                    description: Name is the name to give the container
+                    type: string
+                type: object
+              redis:
+                description: redis is whether to enable redis or not
+                properties:
+                  enabled:
+                    description: specficy whether redis is to be enabled
+                    type: string
+                type: object
+              replicaCount:
+                description: replicaCount is the number of pods to generate
+                type: integer
+              resources:
+                description: resources holds information about the pods
+                properties:
+                  cpuRequest:
+                    description: cpuRequest is the amount of CPU the pod is requesting
+                    type: string
+                  memoryLimit:
+                    description: memoryLimit specifies the max memory the pod will
+                      use
+                    type: string
+                type: object
+            type: object
+          status:
+            description: MyPodinfoStatus defines the observed state of MyPodinfo
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

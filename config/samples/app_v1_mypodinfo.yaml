@@ -1,0 +1,20 @@
+apiVersion: app.cproject.domain/v1
+kind: MyPodinfo
+metadata:
+  labels:
+    app.kubernetes.io/name: mypodinfo
+    app.kubernetes.io/instance: mypodinfo-sample
+    app.kubernetes.io/part-of: mypodinfo
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: mypodinfo
+  name: mypodinfo-sample
+spec:
+  replicaCount: 1
+  resources:
+    memoryLimit: 63MB
+    cpuRequest: 100m
+  image:
+    image: "stefanprodan/podinfo"
+    name: "podinfo"
+  redis: 
+    enabled: "true"
