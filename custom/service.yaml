@@ -18,6 +18,6 @@ spec:
     # nodePort - a static port assigned on each the node
     # port - port exposed internally in the cluster
     # targetPort - the container port to send requests to
-    - nodePort: 8082
+    - nodePort: 30163
       port: 8082
       targetPort: 9898
