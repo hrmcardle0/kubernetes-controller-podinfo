@@ -4,7 +4,7 @@ This project demonstrates how to create a simple k8s controller based on [KubeBu
 The docs are simple to follow and include a few steps including the init'ing a new project, creating a custom resource, installing that custom resource, editing the type definition, and generating a controller.
 
 The controller's main procedure is the Go reconcile function that continously runs and responds to CRUD events based on your custom resource defition. In this project, the custom resource we are creating
-is a pod based on the [PodInfo](https://github.com/stefanprodan/podinfo) project. This is a simple microservice application deployed as a pod with a UI and API.
+is a replicationcontroller based on the [PodInfo](https://github.com/stefanprodan/podinfo) project. This is a simple microservice application deployed as a pod with a UI and API.
 
 # Installation
 
@@ -27,3 +27,27 @@ The script then applies a custom cluster role & binding giving the system:servic
 A NodePort service is then started as a front-end for the podinfo app.
 
 The controller is now installed. 
+
+## Usage
+
+The sample CRD can be deployed with:
+
+`kubectl apply -f config/samples/app_v1_mypodinfo.yaml`
+
+It can then be edited, updated and deleted, which cooresponds to the podinfo resource itself.
+
+Once this is deployed, the podinfo image can be scanned, and kubeaudit can be ran with:
+
+`./pod-scan`
+
+This script uses trivy and kubeaudit to run security checks against the podinfo image as well as the cluster itself.
+
+## Cleanup
+
+To clean up your environment, remove the custom resource:
+
+`kubectl delete mypodinfo --all`
+
+Undeploy the controller:
+
+`make undeploy`
