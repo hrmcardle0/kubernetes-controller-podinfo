@@ -4,7 +4,6 @@
 while [[ $# -gt 0 ]]; do
     case $1 in 
         -i|--image)
-            echo "asdfasd"
             IMAGE="$2"
             shift
             shift
@@ -16,6 +15,8 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# bootstrap out controller
 echo "Bootstrapping environment for MyPodinfo Controller"
 echo "(make) Generating Manfiest"
 make manifests
@@ -23,6 +24,8 @@ echo "(make) Installing CRD"
 make install
 echo "(make) Build docker image...$IMAGE"
 make docker-build docker-push IMG=$IMAGE
+
+# apply custom cluster role, binding and service allowing our service to be accessed locally
 echo "Applying custom role"
 kubectl apply -f custom/cluster-role.yaml
 kubectl apply -f custom/cluster-role-bindings.yaml

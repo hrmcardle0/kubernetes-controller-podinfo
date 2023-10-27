@@ -51,3 +51,13 @@ To clean up your environment, remove the custom resource:
 Undeploy the controller:
 
 `make undeploy`
+
+## Troubleshooting
+
+When updating behind 1 replicas, 1 pod is running while the rest are stuck in pending
+
+- This implementation was implemented on minikube and thus binds staticly to the host port. Another type of service or multiple nodes will need to be created for multiple pods to be running
+
+When creating the custom resource with kubectl apply, I don't see any pods created
+
+- The controller is not running, ensure the output of the controller-setup script correctly shows the image being pulled and the controller is installed. 

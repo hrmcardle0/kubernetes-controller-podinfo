@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/created-by: mypodinfo
   name: mypodinfo-sample
 spec:
-  replicaCount: 1
+  replicaCount: 2
   resources:
     memoryLimit: 63MB
     cpuRequest: 100m

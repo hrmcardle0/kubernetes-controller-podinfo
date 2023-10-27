@@ -1,4 +1,8 @@
 #!/bin/bash
+## Install and run Trivy and KubeAudit scans against the local K8s cluster
+## Assume KubeConfig is correctly configured
+
+# helper function to parse yaml
 function parse_yaml {
    local prefix=$2
    local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
@@ -16,6 +20,7 @@ function parse_yaml {
    }'
 }
 
+# install trivy and kubeaudit
 echo "Installing Trivy"
 sudo rpm -ivh https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.rpm
 IMAGE=$(parse_yaml config/samples/app_v1_mypodinfo.yaml | grep "spec_image_image" | cut -d '"' -f2)
@@ -25,6 +30,8 @@ tar -xvf kubeaudit_0.22.0_linux_386.tar.gz
 rm kubeaudit_0.22.0_linux_386.tar.gz
 echo "Finished installing KubeAudit"
 echo "Running trivy against $IMAGE"
+
+# run trivy and kubeaudit
 trivy image -f table $IMAGE
 echo "Completed trivy"
 echo "Running KubeAudit"
