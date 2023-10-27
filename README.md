@@ -30,17 +30,24 @@ The controller is now installed.
 
 ## Usage
 
-The sample CRD can be deployed with:
-
-`kubectl apply -f config/samples/app_v1_mypodinfo.yaml`
+The sample CRD is contained within the file: config/samples/app_v1_mypodinfo.yaml
 
 It can then be edited, updated and deleted, which cooresponds to the podinfo resource itself.
 
-Once this is deployed, the podinfo image can be scanned, and kubeaudit can be ran with:
+Tests can be run via the following command, which exexcutes the following tests:
+
+- Ensure the controller is registered
+- Ensure creating an instance of the CRD correctly creates a pod of type podinfo
+- Ensure the podinfo application is correctly bootstrapped by curling the token endpoint
+- Ensure the custom resource can be updated and corresponding changes will update the underlying infrastructure appropriately
+- Ensure the custom resource is correctly deleted with all corresponding infrastructure deleted
+
+`./pod-test.sh -c config/samples/app_v1_mypodinfo.yaml`
+
+
+This script uses trivy and kubeaudit to run security checks against the podinfo image as well as the cluster itself:
 
 `./pod-scan`
-
-This script uses trivy and kubeaudit to run security checks against the podinfo image as well as the cluster itself.
 
 ## Cleanup
 

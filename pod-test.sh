@@ -41,6 +41,7 @@ CONTROLLER_INSTALLED=failed
 POD_SUCCESSFUL=failed
 UPDATE_SUCCESSFUL=failed
 CURL_SUCCESSFUL=failed
+DELETE_SUCCESSFUL=failed
 
 # define file name
 DEF=$(echo $FILE | cut -d '/' -f3)
@@ -64,11 +65,17 @@ POD=$(kubectl get pod -l app=podinfo -o jsonpath="{.items[0].metadata.name}")
 
 ## loop until pod is running
 POD_STATUS=$(kubectl get pod $POD -o jsonpath="{.status.phase}")
+times=0
 while [ $POD_STATUS != "Running" ]
 do
     echo "Pod is not running. Waiting 5 seconds..."
     sleep 5
     POD_STATUS=$(kubectl get pod $POD -o jsonpath="{.status.phase}")
+    if [ $times -eq 5 ]; then
+        echo "Pod has been attemping to run for 25 sceonds. Aborting..."
+        exit
+    fi
+    times=$(( $times + 1 ))
 done
 echo "Pod is running, attempting curl of service"
 curl -sd 'anon' 192.168.49.2:30163/token | grep token
@@ -87,8 +94,28 @@ fi
 # reverting update
 sed -i 's/replicaCount: 2/replicaCount: 1/' $FILE
 
+# deletion test
+kubectl delete mypodinfo --all
+## wait for pod to terminate
+kubectl get pods | grep podinfo
+times=0
+while [ $? -eq 0 ]
+do
+    echo "Pod is terminating Waiting 5 seconds..."
+    sleep 5
+    if [ $times -eq 5 ]; then
+        echo "Pod has been attemping to run for 25 sceonds. Aborting..."
+        exit
+    fi
+    times=$(( $times + 1 ))
+    kubectl get pods | grep podinfo
+    
+done
+DELETE_SUCCESSFUL=passed
+
 echo "1) Controller Test Result: $CONTROLLER_INSTALLED"
 echo "2) Pod Test Result: $POD_SUCCESSFUL"
 echo "3) Curl Test Result: $CURL_SUCCESSFUL"
 echo "4) Update Test Result: $UPDATE_SUCCESSFUL"
+echo "5) Deletion Test Result: $DELETE_SUCCESSFUL"
 
